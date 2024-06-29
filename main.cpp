@@ -3,13 +3,18 @@
 #include "unorderedLinkedList.h"
 #include "product.h"
 
+/* Program name: mergeSortProducts.cpp
+    * Author: Carr O'Connor
+    * Date last updated: 6/28/2024
+    * Purpose: Implement and invoke mergesort that takes a function pointer as a parameter
+*/
+
 int compareDescription(product &item1, product &item2);
 int comparePrice(product &item1, product &item2);
 int compareRating(product &item1, product &item2);
 
 int main()
 {
-    
     unorderedLinkedList<product> listByPrice;
     unorderedLinkedList<product> listByDescription;
     unorderedLinkedList<product> listByRating; 
@@ -87,6 +92,7 @@ int main()
     return 0;
 }
 
+//compare products by description
 int compareDescription(product &firstProd, product &secondProd){
     if(firstProd.getDescription() < secondProd.getDescription()){
         return -1;
@@ -97,6 +103,7 @@ int compareDescription(product &firstProd, product &secondProd){
     return 1;
 }
 
+//compare products by price
 int comparePrice(product &firstProd, product &secondProd){
     if(firstProd.getPrice() < secondProd.getPrice()){
         return -1;
@@ -107,6 +114,7 @@ int comparePrice(product &firstProd, product &secondProd){
     return 1;
 }
 
+//compare products by rating
 int compareRating(product &firstProd, product &secondProd){
      if(firstProd.getRating() < secondProd.getRating()){
         return -1;

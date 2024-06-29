@@ -43,19 +43,21 @@ void unorderedLinkedList<type>::mergeSortHelper(node<type>*& headRef, int (*func
     headRef = merge(first, second, func);
 }
 
-// Splits the list into two halves
+// Splits lists using tortoise and hare strategy
 template<class type>
 void unorderedLinkedList<type>::splitList(node<type>* source, node<type>** frontRef, node<type>** backRef) {
-    node<type>* fast;
-    node<type>* slow;
+    node<type>* fast; //will be second element (source->link)
+    node<type>* slow; //will be first element
 
+    //if list is empty or only contains one element then set front and back accordingly
     if (source == nullptr || source->link == nullptr) {
         *frontRef = source;
         *backRef = nullptr;
     } else {
         slow = source;
         fast = source->link;
-        //find last element
+        //find the midpoint by advancing fast by two nodes with each iteration
+        //when fast is null, slow will be mid
         while (fast != nullptr) {
             fast = fast->link;
             if (fast != nullptr) {
@@ -64,9 +66,9 @@ void unorderedLinkedList<type>::splitList(node<type>* source, node<type>** front
             }
         }
 
-        *frontRef = source;
-        *backRef = slow->link;
-        slow->link = nullptr;
+        *frontRef = source; //beginning of first list
+        *backRef = slow->link; //beginning of second list
+        slow->link = nullptr; //set link to nullptr to split lists
     }
 }
 
@@ -75,13 +77,13 @@ template<class type>
 node<type>* unorderedLinkedList<type>::merge(node<type>* first, node<type>* second, int (*func)(type &firstObj, type &secondObj)) {
     node<type>* result = nullptr;
 
-    // Base cases
+    // base cases
     if (first == nullptr)
         return second;
     else if (second == nullptr)
         return first;
 
-    // Pick either first or second and recur
+    // pick either first or second and recur
     if (func(*(first->data), *(second->data)) <= 0) {
         result = first;
         result->link = merge(first->link, second, func);
