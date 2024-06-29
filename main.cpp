@@ -14,7 +14,43 @@ int main()
     unorderedLinkedList<product> listByDescription;
     unorderedLinkedList<product> listByRating; 
 
-    read the product information from the file
+    std::ifstream inputFile("products.txt");
+    if(!inputFile.is_open()){
+        throw std::invalid_argument("Error opening file");
+    }
+
+    //build our lists by reading from the file given
+    std::stringstream ss;
+    ss << inputFile.rdbuf();
+    int index = 1;
+    double currentPrice;
+    std::string currentDesc;
+    std::string currentNum;
+    double currentRating;
+    while(ss.good()){
+        std::string currentLine;
+        std::getline(ss, currentLine, '\n');
+        if(currentLine != ""){
+            if(index == 1){
+                currentPrice = std::stod(currentLine);
+            } else if (index == 2){
+                currentDesc = currentLine;
+            } else if (index == 3) {
+                currentNum = currentLine;
+            }
+            else{
+                currentRating = std::stod(currentLine);
+                product prod = product(currentPrice, currentDesc, currentNum, currentRating);
+                listByPrice.insert(prod);
+                listByDescription.insert(prod);
+                listByRating.insert(prod);
+            }
+        }
+        if(index >= 4)
+            index = 0;
+        index++;
+    }
+
 
     std::cout << std::endl;
     std::cout << "original list for ordering by description: " << std::endl;
@@ -30,8 +66,9 @@ int main()
     std::cout << std::endl
               << std::endl;
 
-    merge sort the 3 lists
-    Don't forget to modify unorderedLinkedList.h to add the merge sort functionality.
+    listByDescription.mergesort(compareDescription);
+    listByPrice.mergesort(comparePrice);
+    listByRating.mergesort(compareRating);
 
     std::cout << "mergeSorted by description product list: " << std::endl;
     listByDescription.print(std::cout, "\n");
@@ -48,4 +85,34 @@ int main()
               << std::endl;
 
     return 0;
+}
+
+int compareDescription(product &firstProd, product &secondProd){
+    if(firstProd.getDescription() < secondProd.getDescription()){
+        return -1;
+    }
+    if(firstProd.getDescription() == secondProd.getDescription()){
+        return 0;
+    }
+    return 1;
+}
+
+int comparePrice(product &firstProd, product &secondProd){
+    if(firstProd.getPrice() < secondProd.getPrice()){
+        return -1;
+    }
+    if(firstProd.getPrice() == secondProd.getPrice()){
+        return 0;
+    }
+    return 1;
+}
+
+int compareRating(product &firstProd, product &secondProd){
+     if(firstProd.getRating() < secondProd.getRating()){
+        return -1;
+    }
+    if(firstProd.getRating() == secondProd.getRating()){
+        return 0;
+    }
+    return 1;
 }
